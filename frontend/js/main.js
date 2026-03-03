@@ -1,6 +1,6 @@
 const BASE_URL = "http://127.0.0.1:5000";
 
-// Login
+// LOGIN
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
@@ -16,27 +16,58 @@ if (loginForm) {
         });
 
         const data = await response.json();
-        document.getElementById("message").innerText = data.message;
+
+        if (data.access_token) {
+            localStorage.setItem("token", data.access_token);
+            window.location.href = "dashboard.html";
+        } else {
+            document.getElementById("message").innerText = data.message;
+        }
     });
 }
 
-// Register
-const registerForm = document.getElementById("registerForm");
-if (registerForm) {
-    registerForm.addEventListener("submit", async (e) => {
+// UPLOAD + MATCH
+const uploadForm = document.getElementById("uploadForm");
+if (uploadForm) {
+    uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("regEmail").value;
-        const password = document.getElementById("regPassword").value;
+        document.getElementById("loading").classList.remove("d-none");
 
-        const response = await fetch(`${BASE_URL}/register`, {
+        const file = document.getElementById("resumeFile").files[0];
+        const jobDescription = document.getElementById("jobDescription").value;
+
+        const formData = new FormData();
+        formData.append("resume", file);
+        formData.append("job_description", jobDescription);
+
+        const response = await fetch(`${BASE_URL}/match`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name, email, password })
+            headers: {
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
+            body: formData
         });
 
         const data = await response.json();
-        document.getElementById("regMessage").innerText = data.message;
+
+        document.getElementById("loading").classList.add("d-none");
+        document.getElementById("resultCard").classList.remove("d-none");
+
+        document.getElementById("matchScore").innerText = data.score + "%";
+
+        const skillsList = document.getElementById("missingSkills");
+        skillsList.innerHTML = "";
+        data.missing_skills.forEach(skill => {
+            const li = document.createElement("li");
+            li.innerText = skill;
+            skillsList.appendChild(li);
+        });
     });
+}
+
+// LOGOUT
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
 }
