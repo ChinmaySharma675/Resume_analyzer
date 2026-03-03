@@ -119,11 +119,11 @@ resume-analyzer/
 
 👥 Team Members
 
-| Name      | Role                 |
-| --------- | -------------------- |
-| Anmol S   | Backend Developer    |
-| Chinmay s | Frontend Developer   |
-| Anurag Y  | Testing & Deployment |
+| Name         | Role                 |
+| -----------  | -------------------- |
+| Anmol Singh  | Backend Developer    |
+| ChinmaySharma| Frontend Developer   |
+| Anurag Yadav | Testing & Deployment |
 
 
 📜 License
