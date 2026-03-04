@@ -4,6 +4,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 from app.extensions import db
 from app.models import Resume
 from app.utils.parser import extract_text
+from app.utils.skill_extractor import extract_skills
 
 resume_bp = Blueprint("resume", __name__)
 
@@ -19,6 +20,8 @@ def upload_resume():
     text = extract_text(filepath)
 
     resume = Resume(filename=file.filename, content=text, user_id=user_id)
+    resume.skills = ", ".join(extract_skills(text))
+    
     db.session.add(resume)
     db.session.commit()
 
