@@ -1,10 +1,15 @@
 /* Custom Properties for Theme */
 :root {
-    --primary-color: #4f46e5; /* Indigo 600 */
-    --primary-hover: #4338ca; /* Indigo 700 */
-    --bg-dark: #0f172a; /* Slate 900 */
-    --text-dark: #f8fafc; /* Slate 50 */
-    --text-muted: #94a3b8; /* Slate 400 */
+    --primary-color: #4f46e5;
+    /* Indigo 600 */
+    --primary-hover: #4338ca;
+    /* Indigo 700 */
+    --bg-dark: #0f172a;
+    /* Slate 900 */
+    --text-dark: #f8fafc;
+    /* Slate 50 */
+    --text-muted: #94a3b8;
+    /* Slate 400 */
     --glass-bg: rgba(15, 23, 42, 0.7);
     --glass-border: rgba(255, 255, 255, 0.1);
 }
@@ -91,7 +96,7 @@ body {
     position: absolute;
     width: 600px;
     height: 600px;
-    background: radial-gradient(circle, rgba(79,70,229,0.15) 0%, rgba(15,23,42,0) 70%);
+    background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -100,8 +105,15 @@ body {
 }
 
 @keyframes pulse {
-    0% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
-    100% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; }
+    0% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0.8;
+    }
+
+    100% {
+        transform: translate(-50%, -50%) scale(1.3);
+        opacity: 1;
+    }
 }
 
 .hero-title {
@@ -122,6 +134,48 @@ body {
     margin: 0 auto 2.5rem;
 }
 
+/* Glass Card & Form Controls */
+.glass-card {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    color: var(--text-dark);
+}
+
+.form-control-custom {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid var(--glass-border) !important;
+    color: var(--text-dark) !important;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control-custom:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25) !important;
+    background: rgba(15, 23, 42, 0.8) !important;
+}
+
+.form-control-custom::placeholder {
+    color: var(--text-muted);
+}
+
+/* Auth Pages Container */
+.auth-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 5rem;
+    position: relative;
+    z-index: 1;
+}
+
 /* Footer */
 footer {
     background: #0b1120 !important;
@@ -136,7 +190,12 @@ footer {
     .hero-title {
         font-size: 3rem;
     }
+
     .hero-subtitle {
         font-size: 1.1rem;
+    }
+
+    .glass-card {
+        padding: 1.5rem;
     }
 }
