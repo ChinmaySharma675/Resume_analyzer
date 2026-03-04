@@ -27,6 +27,37 @@ body {
     overflow-x: hidden;
 }
 
+/* Custom Webkit Scrollbar */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+/* Global Animations */
+@keyframes fadeUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 /* Glassmorphism Navbar */
 .navbar {
     background: var(--glass-bg) !important;
@@ -42,6 +73,7 @@ body {
     font-size: 1.5rem;
     background: linear-gradient(135deg, #a855f7, #3b82f6);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.5px;
 }
@@ -161,6 +193,7 @@ body {
     line-height: 1.1;
     background: linear-gradient(to right, #ffffff, #94a3b8);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -1.5px;
 }
@@ -182,6 +215,7 @@ body {
     padding: 2.5rem;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     color: var(--text-dark);
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .form-control-custom,
@@ -196,8 +230,9 @@ body {
 
 .form-control-custom:focus {
     border-color: var(--primary-color) !important;
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25), 0 4px 10px rgba(0, 0, 0, 0.3) !important;
     background: rgba(15, 23, 42, 0.8) !important;
+    transform: translateY(-2px);
 }
 
 .form-control-custom::placeholder {
@@ -234,6 +269,7 @@ body {
     padding: 2rem;
     text-align: center;
     transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+    animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .stat-card:hover {
@@ -258,6 +294,7 @@ body {
     margin: 0;
     background: linear-gradient(135deg, #a855f7, #3b82f6);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -267,6 +304,7 @@ body {
     font-size: 3.5rem;
     background: linear-gradient(135deg, var(--success-color), #34d399);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -318,5 +356,17 @@ footer {
 
     .glass-card {
         padding: 1.5rem;
+    }
+
+    .stat-card {
+        padding: 1.5rem;
+    }
+
+    .page-container {
+        padding-top: 6rem;
+    }
+
+    #resultCard h2 {
+        font-size: 2.5rem;
     }
 }
