@@ -12,6 +12,10 @@
     /* Slate 400 */
     --glass-bg: rgba(15, 23, 42, 0.7);
     --glass-border: rgba(255, 255, 255, 0.1);
+    --danger-color: #ef4444;
+    /* Red 500 */
+    --success-color: #10b981;
+    /* Emerald 500 */
 }
 
 body {
@@ -80,6 +84,39 @@ body {
     color: white;
 }
 
+.btn-danger-outline {
+    color: #fca5a5;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    padding: 0.6rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+.btn-danger-outline:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: white;
+    border-color: var(--danger-color);
+}
+
+.btn-success-gradient {
+    background: linear-gradient(135deg, var(--success-color), #34d399);
+    color: white;
+    border: none;
+    padding: 0.6rem 1.75rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.btn-success-gradient:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+    color: white;
+}
+
 /* Hero Section */
 .hero-section {
     min-height: 100vh;
@@ -93,7 +130,8 @@ body {
 
 /* Animated Ambient Glow Background */
 .hero-glow {
-    position: absolute;
+    position: fixed;
+    /* Changed to fixed so it spans across scrolling pages */
     width: 600px;
     height: 600px;
     background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, rgba(15, 23, 42, 0) 70%);
@@ -146,7 +184,8 @@ body {
     color: var(--text-dark);
 }
 
-.form-control-custom {
+.form-control-custom,
+.form-control-custom[type="file"]::file-selector-button {
     background: rgba(15, 23, 42, 0.6) !important;
     border: 1px solid var(--glass-border) !important;
     color: var(--text-dark) !important;
@@ -163,6 +202,88 @@ body {
 
 .form-control-custom::placeholder {
     color: var(--text-muted);
+}
+
+.form-control-custom[type="file"] {
+    padding: 1.5rem 1rem;
+    border: 2px dashed rgba(255, 255, 255, 0.2) !important;
+    text-align: center;
+    cursor: pointer;
+}
+
+.form-control-custom[type="file"]:hover {
+    border-color: var(--primary-color) !important;
+    background: rgba(49, 46, 129, 0.2) !important;
+}
+
+/* Page Container (Dashboard, Upload) */
+.page-container {
+    padding-top: 8rem;
+    min-height: calc(100vh - 8rem);
+    position: relative;
+    z-index: 1;
+}
+
+/* Stat Card */
+.stat-card {
+    background: rgba(30, 41, 59, 0.4);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    text-align: center;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    background: rgba(30, 41, 59, 0.6);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.stat-card h5 {
+    color: var(--text-muted);
+    font-size: 1rem;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.stat-card h3 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 0;
+    background: linear-gradient(135deg, #a855f7, #3b82f6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Result Card */
+#resultCard h2 {
+    font-weight: 800;
+    font-size: 3.5rem;
+    background: linear-gradient(135deg, var(--success-color), #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+#missingSkills li {
+    background: rgba(239, 68, 68, 0.1);
+    color: #fca5a5;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    display: inline-block;
+    margin: 0.25rem;
+    font-size: 0.9rem;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+#missingSkills {
+    list-style: none;
+    padding-left: 0;
 }
 
 /* Auth Pages Container */
