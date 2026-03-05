@@ -1,329 +1,97 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Context-aware AI resume analyzer using NLP. Get instant job match scores, skill gap analysis, and improvement suggestions for students and freshers.">
-    <title>ResumeAI | Context-Aware Resume Analyzer</title>
+    <title>Context Aware Resume Analyzer</title>
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/styles.css">
 </head>
-
 <body>
-    <!-- Page Loader -->
-    <div class="page-loader" id="pageLoader">
-        <div class="loader-spinner"></div>
-        <span class="loader-text">Loading ResumeAI...</span>
-    </div>
 
-    <!-- Particle Canvas Background -->
-    <canvas id="particles-canvas"></canvas>
-
-    <!-- Ambient Glow Orbs -->
-    <div class="ambient-glow ambient-glow-1"></div>
-    <div class="ambient-glow ambient-glow-2"></div>
-    <div class="ambient-glow ambient-glow-3"></div>
-
-    <div class="page-wrapper">
-
-        <!-- Navbar -->
-        <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
-            <div class="container">
-                <a class="navbar-brand" href="index.html">
-                    <span class="brand-icon">🧠</span>
-                    ResumeAI
-                </a>
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <i class="bi bi-list text-white fs-4"></i>
-                </button>
-                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                    <ul class="navbar-nav me-3 gap-1">
-                        <li class="nav-item"><a class="nav-link active-page" href="#features">Features</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
-                        <li class="nav-item"><a class="nav-link" href="#stats">About</a></li>
-                    </ul>
-                    <div class="d-flex gap-2 mt-3 mt-lg-0 align-items-center">
-                        <a href="login.html" class="btn-outline-glass">Login</a>
-                        <a href="register.html" class="btn-primary-grad">Get Started <i class="bi bi-arrow-right"></i></a>
-                    </div>
+    <!-- Transparent Navbar -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">Resume Analyzer</a>
+            <button class="navbar-toggler navbar-dark border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <div class="d-flex gap-3 mt-3 mt-lg-0">
+                    <a href="login.html" class="btn-custom-outline">Login</a>
+                    <a href="register.html" class="btn-custom-primary">Register</a>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
 
-        <!-- ===== HERO SECTION ===== -->
-        <main class="hero-section" id="hero">
-            <div class="container text-center">
-                <div class="hero-badge mb-3">
-                    <span class="dot"></span>
-                    AI-Powered · NLP-Based · Student-Friendly
-                </div>
+    <!-- Hero Section -->
+    <main class="hero-section">
+        <div class="hero-glow"></div>
+        <div class="container">
+            <div class="hero-badge">✦ AI &amp; NLP Powered</div>
+            <h1 class="hero-title shimmer-title">AI Powered<br>Resume Screening</h1>
+            <p class="hero-subtitle">
+                Revolutionize your hiring process. Upload a resume and get intelligent, context-aware job matching scores instantly using advanced NLP techniques.
+            </p>
+            <a href="upload.html" class="btn-custom-primary btn-lg mt-2 px-5 py-3 fs-5">Get Started Now</a>
+        </div>
+    </main>
 
-                <h1 class="hero-title">
-                    Analyze Your Resume<br>
-                    <span class="gradient-text">With Context-Aware AI</span>
-                </h1>
-
-                <p class="hero-subtitle">
-                    Stop losing to keyword-matching filters. Our NLP engine understands the
-                    <em>meaning</em> behind your skills and projects — giving freshers a fair,
-                    intelligent evaluation and personalized career roadmap.
-                </p>
-
-                <div class="hero-cta-group">
-                    <a href="upload.html" class="btn-primary-grad px-5 py-3 fs-5">
-                        <i class="bi bi-upload"></i> Analyze My Resume
-                    </a>
-                    <a href="#how-it-works" class="btn-outline-glass px-4 py-3 fs-5">
-                        <i class="bi bi-play-circle"></i> See How It Works
-                    </a>
-                </div>
-
-                <!-- Trust indicators -->
-                <div class="d-flex gap-4 mt-5 justify-content-center flex-wrap">
-                    <span class="badge-pill badge-primary"><i class="bi bi-cpu"></i> NLP Engine</span>
-                    <span class="badge-pill badge-success"><i class="bi bi-shield-check"></i> Fresher-Friendly</span>
-                    <span class="badge-pill badge-purple"><i class="bi bi-graph-up"></i> Context-Aware Scoring</span>
-                </div>
-            </div>
-
-            <div class="hero-scroll-indicator">
-                <span>Scroll</span>
-                <div class="scroll-arrow"></div>
-            </div>
-        </main>
-
-        <!-- ===== FEATURES SECTION ===== -->
-        <section id="features" class="bg-surface">
-            <div class="container">
-                <div class="text-center mb-5">
-                    <span class="section-label">What We Offer</span>
-                    <h2 class="section-title">Everything You Need to Stand Out</h2>
-                    <p class="section-subtitle">
-                        Our AI doesn't just scan for keywords — it deeply understands your resume's context,
-                        relevance, and potential.
-                    </p>
-                </div>
-
-                <div class="row g-4">
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-blue">🔍</div>
-                            <h5>Semantic Analysis</h5>
-                            <p>Uses Word Embeddings to understand the contextual meaning of your skills and experience, not just keyword matches.</p>
+    <!-- Features Section -->
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Why Choose Our Analyzer?</h2>
+            <p class="section-subtitle">Built with NLP & AI to give every candidate a fair, intelligent evaluation.</p>
+            <div class="row g-4 mt-2">
+                <!-- Feature Card 1 -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L1.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/><path stroke-linecap="round" stroke-linejoin="round" d="M18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z"/></svg>
                         </div>
+                        <h4 class="feature-title">Context-Aware Analysis</h4>
+                        <p class="feature-desc">Goes beyond keywords. Our NLP engine understands semantic meaning, skill relevance, and contextual fit of your resume.</p>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-purple">📊</div>
-                            <h5>Match Score Engine</h5>
-                            <p>TF-IDF and cosine similarity calculates a precise compatibility score between your resume and the target job description.</p>
+                </div>
+                <!-- Feature Card 2 -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v17.25m0 0c-1.472 0-2.882.265-4.185.75M12 20.25c1.472 0 2.882.265 4.185.75M18.75 4.97A48.416 48.416 0 0012 4.5c-2.291 0-4.545.16-6.75.47m13.5 0c1.01.143 2.01.317 3 .52m-3-.52l2.62 10.726c.122.499-.106 1.028-.589 1.202a5.988 5.988 0 01-2.031.352 5.988 5.988 0 01-2.031-.352c-.483-.174-.711-.703-.59-1.202L18.75 4.97z"/></svg>
                         </div>
+                        <h4 class="feature-title">Fair Scoring for Freshers</h4>
+                        <p class="feature-desc">Specially designed to evaluate students and freshers on skills, projects & certifications — not just years of experience.</p>
                     </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-green">✅</div>
-                            <h5>Skill Gap Detection</h5>
-                            <p>Identifies which skills from the job description are missing or underrepresented in your resume so you know what to learn next.</p>
+                </div>
+                <!-- Feature Card 3 -->
+                <div class="col-md-4">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/></svg>
                         </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-pink">💡</div>
-                            <h5>AI-Powered Suggestions</h5>
-                            <p>Receive actionable recommendations on how to improve your projects section, certifications, and resume formatting.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-yellow">🎓</div>
-                            <h5>Fresher-Optimized</h5>
-                            <p>Specially designed to fairly evaluate students with limited work experience, focusing on projects, skills, and certifications.</p>
-                        </div>
-                    </div>
-                    <div class="col-md-6 col-lg-4">
-                        <div class="feature-card">
-                            <div class="feature-icon icon-indigo">📁</div>
-                            <h5>PDF / DOCX Support</h5>
-                            <p>Upload your resume in PDF or Word format. Our text extraction pipeline automatically parses all sections accurately.</p>
-                        </div>
+                        <h4 class="feature-title">Smart Suggestions</h4>
+                        <p class="feature-desc">Get personalized improvement tips — missing skills to add, sections to strengthen, and formatting best practices.</p>
                     </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
 
-        <!-- ===== HOW IT WORKS ===== -->
-        <section id="how-it-works">
-            <div class="container">
-                <div class="row align-items-center g-5">
-                    <div class="col-lg-5">
-                        <span class="section-label">The Process</span>
-                        <h2 class="section-title">From Upload to<br>Actionable Insights</h2>
-                        <p class="section-subtitle" style="max-width: 100%;">
-                            Our ML pipeline processes your resume in seconds and delivers a comprehensive analysis report.
-                        </p>
-                        <a href="register.html" class="btn-primary-grad mt-4">
-                            Try It Free <i class="bi bi-arrow-right"></i>
-                        </a>
-                    </div>
-                    <div class="col-lg-7">
-                        <div class="steps-wrapper">
-                            <div class="step-item">
-                                <div class="step-left">
-                                    <div class="step-number">1</div>
-                                    <div class="step-line"></div>
-                                </div>
-                                <div class="step-content">
-                                    <span class="step-label-tag">Upload</span>
-                                    <h5>Upload Your Resume</h5>
-                                    <p>Drag and drop your PDF or DOCX resume. Our parser extracts text from all sections automatically.</p>
-                                </div>
-                            </div>
-                            <div class="step-item">
-                                <div class="step-left">
-                                    <div class="step-number">2</div>
-                                    <div class="step-line"></div>
-                                </div>
-                                <div class="step-content">
-                                    <span class="step-label-tag">Input</span>
-                                    <h5>Paste the Job Description</h5>
-                                    <p>Enter the job posting you're targeting. The AI uses this as context to perform the matching analysis.</p>
-                                </div>
-                            </div>
-                            <div class="step-item">
-                                <div class="step-left">
-                                    <div class="step-number">3</div>
-                                    <div class="step-line"></div>
-                                </div>
-                                <div class="step-content">
-                                    <span class="step-label-tag">Process</span>
-                                    <h5>NLP Processing & Scoring</h5>
-                                    <p>SpaCy and Scikit-learn analyze semantic similarity, extract skills, and run ML models for scoring.</p>
-                                </div>
-                            </div>
-                            <div class="step-item">
-                                <div class="step-left">
-                                    <div class="step-number">4</div>
-                                </div>
-                                <div class="step-content">
-                                    <span class="step-label-tag">Results</span>
-                                    <h5>Get Your Report & Improve</h5>
-                                    <p>View your compatibility score, matched skills, gaps, and personalized suggestions to improve employability.</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Footer -->
+    <footer class="text-center">
+        <div class="container">
+            <p class="mb-0">© 2026 Context Aware Resume Analyzer | Semester Project</p>
+        </div>
+    </footer>
 
-        <!-- ===== STATS SECTION ===== -->
-        <section id="stats" class="bg-surface">
-            <div class="container text-center">
-                <span class="section-label">Impact</span>
-                <h2 class="section-title mb-5">Built for Students, Powered by AI</h2>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="95">0</span>
-                        <span class="stat-label">% Accuracy in Skill Detection</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="5">0</span>
-                        <span class="stat-label">Seconds Average Analysis Time</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="6">0</span>
-                        <span class="stat-label">Resume Sections Analyzed</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" data-target="100">0</span>
-                        <span class="stat-label">% Free for Students</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== CTA SECTION ===== -->
-        <section>
-            <div class="container text-center">
-                <div class="glass-card" style="max-width: 700px; margin: 0 auto; border-color: rgba(99,102,241,0.3);">
-                    <div style="font-size:3rem; margin-bottom:1rem;">🚀</div>
-                    <h2 class="section-title">Ready to Boost Your<br>Job Applications?</h2>
-                    <p class="section-subtitle mt-2 mb-4">
-                        Join students using AI-powered resume analysis to land their dream jobs.
-                        It's free, fast, and specifically designed for freshers.
-                    </p>
-                    <a href="register.html" class="btn-primary-grad px-5 py-3 fs-5">
-                        <i class="bi bi-person-plus"></i> Create Free Account
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <!-- ===== FOOTER ===== -->
-        <footer>
-            <div class="container">
-                <div class="row g-4 mb-4">
-                    <div class="col-lg-4">
-                        <div class="footer-brand"><span>ResumeAI</span></div>
-                        <p class="footer-tagline mt-2">Context-Aware Resume Analyzer using AI & NLP.<br>A Mini Project — Computer Science Department.</p>
-                        <ul class="social-icon-list mt-3">
-                            <li><a href="#" aria-label="GitHub"><i class="bi bi-github"></i></a></li>
-                            <li><a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a></li>
-                            <li><a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6 col-lg-2 offset-lg-2">
-                        <h6 class="footer-heading">Product</h6>
-                        <ul class="footer-links">
-                            <li><a href="#features">Features</a></li>
-                            <li><a href="#how-it-works">How It Works</a></li>
-                            <li><a href="upload.html">Analyze Resume</a></li>
-                            <li><a href="dashboard.html">Dashboard</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6 col-lg-2">
-                        <h6 class="footer-heading">Account</h6>
-                        <ul class="footer-links">
-                            <li><a href="login.html">Login</a></li>
-                            <li><a href="register.html">Register</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-sm-6 col-lg-2">
-                        <h6 class="footer-heading">Tech Stack</h6>
-                        <ul class="footer-links">
-                            <li><a href="#">Python & Flask</a></li>
-                            <li><a href="#">SpaCy / NLTK</a></li>
-                            <li><a href="#">Scikit-learn</a></li>
-                            <li><a href="#">HTML / CSS / JS</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <span>© 2026 ResumeAI — Context-Aware Resume Analyzer | Mini Project</span>
-                    <span>Made with ❤️ using AI & NLP</span>
-                </div>
-            </div>
-        </footer>
-
-    </div><!-- end page-wrapper -->
-
-    <!-- Scroll to Top -->
-    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="Scroll to top">
-        <i class="bi bi-arrow-up"></i>
-    </button>
-
-    <!-- Toast Container -->
-    <div class="toast-container-custom" id="toastContainer"></div>
-
+    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/main.js"></script>
 </body>
-
 </html>
