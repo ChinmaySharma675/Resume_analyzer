@@ -198,6 +198,36 @@ body {
     letter-spacing: -1.5px;
 }
 
+/* Hero Badge Pill */
+.hero-badge {
+    display: inline-block;
+    background: rgba(139, 92, 246, 0.12);
+    border: 1px solid rgba(139, 92, 246, 0.4);
+    color: #c4b5fd;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.4rem 1.1rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.5px;
+    animation: fadeUp 0.5s ease forwards;
+}
+
+/* Shimmer animation on hero title */
+@keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position: 200% center; }
+}
+
+.shimmer-title {
+    background: linear-gradient(90deg, #94a3b8 0%, #ffffff 30%, #a78bfa 50%, #ffffff 70%, #94a3b8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+}
+
 .hero-subtitle {
     font-size: 1.25rem;
     color: var(--text-muted);
