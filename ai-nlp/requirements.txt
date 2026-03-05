@@ -1,6 +1,7 @@
 spacy>=3.7.0
 PyPDF2>=3.0.0
 python-docx>=1.1.0
+docx2txt>=0.8
 fastapi>=0.100.0
 uvicorn>=0.23.0
 pydantic>=2.0.0
