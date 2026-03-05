@@ -1,18 +1,14 @@
 import os
 import json
 from dotenv import load_dotenv
-import requests
+import google.generativeai as genai
 
 load_dotenv()
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GEMINI_URL = (
-    "https://generativelanguage.googleapis.com/v1beta/models/"
-    "gemini-2.0-flash:generateContent"
-)
 
 RESUME_PARSE_PROMPT = """
-You are an expert resume parser. Given the resume text below, extract structured information and return it ONLY as valid JSON (no extra text).
+You are an expert resume parser. Given the resume text below, extract structured information and return it ONLY as valid JSON (no extra text, no markdown).
 
 The JSON should follow this exact structure:
 {{
@@ -46,51 +42,39 @@ Resume Text:
 
 def analyze_with_gemini(resume_text: str) -> dict:
     """
-    Send resume text to Gemini API and get structured JSON output.
+    Send resume text to Gemini API using the official SDK
+    and return structured JSON output.
     """
     if not GEMINI_API_KEY:
         return {"error": "GEMINI_API_KEY not set in .env file."}
 
-    prompt = RESUME_PARSE_PROMPT.format(resume_text=resume_text)
-
-    payload = {
-        "contents": [
-            {
-                "parts": [{"text": prompt}]
-            }
-        ],
-        "generationConfig": {
-            "temperature": 0.1,   # Low temp for consistent structured output
-            "maxOutputTokens": 2048
-        }
-    }
-
     try:
-        response = requests.post(
-            GEMINI_URL,
-            params={"key": GEMINI_API_KEY},
-            json=payload,
-            timeout=30
+        genai.configure(api_key=GEMINI_API_KEY)
+        model = genai.GenerativeModel("gemini-2.0-flash")
+
+        prompt = RESUME_PARSE_PROMPT.format(resume_text=resume_text[:8000])  # limit input size
+
+        response = model.generate_content(
+            prompt,
+            generation_config=genai.GenerationConfig(
+                temperature=0.1,
+                max_output_tokens=2048,
+            )
         )
-        response.raise_for_status()
-        data = response.json()
 
-        # Extract the text content from the response
-        raw_output = data["candidates"][0]["content"]["parts"][0]["text"]
+        raw_output = response.text.strip()
 
-        # Strip markdown code blocks if Gemini wraps JSON in ```json ... ```
-        raw_output = raw_output.strip()
+        # Strip markdown code fences if present
         if raw_output.startswith("```"):
-            raw_output = raw_output.split("```")[1]
+            parts = raw_output.split("```")
+            raw_output = parts[1] if len(parts) > 1 else raw_output
             if raw_output.startswith("json"):
                 raw_output = raw_output[4:]
-        
+
         parsed = json.loads(raw_output.strip())
         return parsed
 
-    except requests.exceptions.RequestException as e:
-        return {"error": f"API request failed: {str(e)}"}
-    except (KeyError, IndexError) as e:
-        return {"error": f"Unexpected API response format: {str(e)}"}
     except json.JSONDecodeError as e:
         return {"error": f"Failed to parse JSON from Gemini response: {str(e)}"}
+    except Exception as e:
+        return {"error": f"Gemini API error: {str(e)}"}
