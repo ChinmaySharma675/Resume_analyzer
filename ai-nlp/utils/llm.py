@@ -1,7 +1,8 @@
 import os
 import json
 from dotenv import load_dotenv
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 load_dotenv()
 
@@ -42,21 +43,21 @@ Resume Text:
 
 def analyze_with_gemini(resume_text: str) -> dict:
     """
-    Send resume text to Gemini API using the official SDK
+    Send resume text to Gemini API using the official google-genai SDK
     and return structured JSON output.
     """
     if not GEMINI_API_KEY:
         return {"error": "GEMINI_API_KEY not set in .env file."}
 
     try:
-        genai.configure(api_key=GEMINI_API_KEY)
-        model = genai.GenerativeModel("gemini-2.0-flash")
+        client = genai.Client(api_key=GEMINI_API_KEY)
 
-        prompt = RESUME_PARSE_PROMPT.format(resume_text=resume_text[:8000])  # limit input size
+        prompt = RESUME_PARSE_PROMPT.format(resume_text=resume_text[:8000])
 
-        response = model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
+        response = client.models.generate_content(
+            model="gemini-2.0-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
                 temperature=0.1,
                 max_output_tokens=2048,
             )
