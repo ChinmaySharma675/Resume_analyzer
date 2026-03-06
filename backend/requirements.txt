@@ -7,3 +7,4 @@ Werkzeug
 PyPDF2
 scikit-learn
 nltk
+flask-cors
