@@ -6,6 +6,8 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Upload from './pages/Upload';
 import JobMatching from './pages/JobMatching';
+import JobEligibility from './pages/JobEligibility';
+import ResumeAnalysis from './pages/ResumeAnalysis';
 import { AuthProvider, AuthContext } from './context/AuthContext';
 
 const PrivateRoute = ({ children }) => {
@@ -25,6 +27,8 @@ const AppContent = () => {
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
         <Route path="/job-matching" element={<PrivateRoute><JobMatching /></PrivateRoute>} />
+        <Route path="/job-eligibility" element={<PrivateRoute><JobEligibility /></PrivateRoute>} />
+        <Route path="/resume/:id/analysis" element={<PrivateRoute><ResumeAnalysis /></PrivateRoute>} />
       </Routes>
     </>
   );

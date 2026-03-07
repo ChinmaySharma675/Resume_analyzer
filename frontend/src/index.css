@@ -1,13 +1,14 @@
 :root {
-  --primary: #6366f1;
-  --primary-glow: rgba(99, 102, 241, 0.4);
-  --secondary: #8b5cf6;
-  --bg-dark: #0f172a;
-  --bg-card: #1e293b;
-  --text-main: #f8fafc;
-  --text-muted: #94a3b8;
+  --primary: #4f46e5;
+  --primary-glow: rgba(79, 70, 229, 0.2);
+  --secondary: #7c3aed;
+  --bg-dark: #f0f4f8;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
   --success: #10b981;
   --danger: #ef4444;
+  --border-light: #e2e8f0;
 }
 
 * {
@@ -82,15 +83,15 @@ a {
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: rgba(0, 0, 0, 0.05);
 }
 
 .card {
   background-color: var(--bg-card);
   border-radius: 1rem;
   padding: 2rem;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border-light);
 }
 
 .input-group {
@@ -108,8 +109,8 @@ a {
   width: 100%;
   padding: 0.75rem 1rem;
   border-radius: 0.5rem;
-  background-color: rgba(15, 23, 42, 0.5);
-  border: 1px solid #334155;
+  background-color: #f8fafc;
+  border: 1px solid var(--border-light);
   color: var(--text-main);
   transition: all 0.2s;
 }
@@ -135,25 +136,25 @@ a {
 
 /* Dropzone */
 .dropzone {
-  border: 2px dashed #334155;
+  border: 2px dashed var(--border-light);
   border-radius: 1rem;
   padding: 3rem;
   text-align: center;
   transition: all 0.2s ease;
   cursor: pointer;
-  background-color: rgba(15, 23, 42, 0.3);
+  background-color: #f8fafc;
 }
 
 .dropzone:hover, .dropzone.active {
   border-color: var(--primary);
-  background-color: rgba(99, 102, 241, 0.05);
+  background-color: rgba(79, 70, 229, 0.05);
 }
 
 .glass-nav {
-  background: rgba(30, 41, 59, 0.7);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-light);
   position: sticky;
   top: 0;
   z-index: 50;

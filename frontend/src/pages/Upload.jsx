@@ -1,11 +1,14 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { UploadCloud, File, CheckCircle } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { UploadCloud, File, CheckCircle, Type, Image as ImageIcon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Upload = () => {
   const [file, setFile] = useState(null);
+  const [textInput, setTextInput] = useState('');
+  const [targetJob, setTargetJob] = useState('');
+  const [uploadMode, setUploadMode] = useState('file'); // 'file' or 'text'
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
@@ -29,17 +32,25 @@ const Upload = () => {
   };
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (uploadMode === 'file' && !file) return;
+    if (uploadMode === 'text' && !textInput.trim()) return;
+    
     setLoading(true);
     setError('');
 
-    const formData = new FormData();
-    formData.append('resume', file);
-
     try {
-      await api.post('/upload', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      if (uploadMode === 'file') {
+        const formData = new FormData();
+        formData.append('resume', file);
+        if (targetJob.trim()) formData.append('target_job', targetJob.trim());
+        
+        await api.post('/upload', formData, {
+          headers: { 'Content-Type': 'multipart/form-data' }
+        });
+      } else {
+        await api.post('/upload', { text: textInput, target_job: targetJob.trim() });
+      }
+      
       setSuccess(true);
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (err) {
@@ -53,7 +64,42 @@ const Upload = () => {
     <div className="container main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
       <div style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '600px' }}>
         <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Upload Resume</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem' }}>Upload your resume in PDF format. Our NLP engine will extract your skills and experience for job matching.</p>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem' }}>Upload your resume in PDF/Image format or simply paste the text. Our NLP engine will extract your skills and experience for job matching.</p>
+      </div>
+
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem', borderRadius: '1rem' }}>
+        <button 
+          onClick={() => setUploadMode('file')}
+          style={{ 
+            padding: '0.75rem 1.5rem', 
+            borderRadius: '0.75rem', 
+            border: 'none', 
+            background: uploadMode === 'file' ? 'var(--primary)' : 'transparent',
+            color: uploadMode === 'file' ? 'white' : 'var(--text-muted)',
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            fontWeight: '500'
+          }}
+        >
+          <ImageIcon size={18} /> File Upload
+        </button>
+        <button 
+          onClick={() => setUploadMode('text')}
+          style={{ 
+            padding: '0.75rem 1.5rem', 
+            borderRadius: '0.75rem', 
+            border: 'none', 
+            background: uploadMode === 'text' ? 'var(--primary)' : 'transparent',
+            color: uploadMode === 'text' ? 'white' : 'var(--text-muted)',
+            display: 'flex', alignItems: 'center', gap: '0.5rem',
+            cursor: 'pointer',
+            transition: 'all 0.2s',
+            fontWeight: '500'
+          }}
+        >
+          <Type size={18} /> Paste Text
+        </button>
       </div>
 
       <motion.div 
@@ -71,36 +117,67 @@ const Upload = () => {
           </div>
         ) : (
           <>
-            <div 
-              className="dropzone" 
-              onDragOver={handleDragOver} 
-              onDrop={handleDrop}
-              onClick={() => document.getElementById('fileUpload').click()}
-              style={{ width: '100%' }}
-            >
-              <input 
-                id="fileUpload" 
-                type="file" 
-                accept=".pdf,.docx" 
-                hidden 
-                onChange={handleChange} 
-              />
-              
-              {!file ? (
-                <>
-                  <div style={{ display: 'inline-flex', background: 'rgba(99, 102, 241, 0.1)', padding: '1rem', borderRadius: '50%', marginBottom: '1.5rem' }}>
-                    <UploadCloud size={48} color="var(--primary)" />
+            {uploadMode === 'file' ? (
+              <div 
+                className="dropzone" 
+                onDragOver={handleDragOver} 
+                onDrop={handleDrop}
+                onClick={() => document.getElementById('fileUpload').click()}
+                style={{ width: '100%' }}
+              >
+                <input 
+                  id="fileUpload" 
+                  type="file" 
+                  accept=".pdf,.docx,.png,.jpg,.jpeg" 
+                  hidden 
+                  onChange={handleChange} 
+                />
+                
+                {!file ? (
+                  <>
+                    <div style={{ display: 'inline-flex', background: 'rgba(99, 102, 241, 0.1)', padding: '1rem', borderRadius: '50%', marginBottom: '1.5rem' }}>
+                      <UploadCloud size={48} color="var(--primary)" />
+                    </div>
+                    <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Click or drag file to this area to upload</h3>
+                    <p style={{ color: 'var(--text-muted)' }}>Support for PDF, DOCX, PNG, JPG.</p>
+                  </>
+                ) : (
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
+                    <File size={48} color="var(--primary)" />
+                    <div style={{ fontWeight: '500' }}>{file.name}</div>
+                    <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</div>
                   </div>
-                  <h3 style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>Click or drag file to this area to upload</h3>
-                  <p style={{ color: 'var(--text-muted)' }}>Support for a single or bulk upload. Strictly PDF or DOCX.</p>
-                </>
-              ) : (
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem' }}>
-                  <File size={48} color="var(--primary)" />
-                  <div style={{ fontWeight: '500' }}>{file.name}</div>
-                  <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>{(file.size / 1024 / 1024).toFixed(2)} MB</div>
-                </div>
-              )}
+                )}
+              </div>
+            ) : (
+              <div style={{ width: '100%' }}>
+                <textarea
+                  className="input"
+                  placeholder="Paste your resume text here..."
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  style={{ 
+                    width: '100%', 
+                    minHeight: '250px', 
+                    resize: 'vertical',
+                    padding: '1rem',
+                    fontFamily: 'inherit',
+                    color: '#0f172a', /* Darken font color explicitly */
+                    backgroundColor: '#f1f5f9'
+                  }}
+                />
+              </div>
+            )}
+
+            <div className="input-group" style={{ width: '100%', marginTop: '1.5rem', marginBottom: '0' }}>
+              <label style={{ fontWeight: '500', color: 'var(--text-main)', marginBottom: '0.5rem' }}>Target Job Role (Optional)</label>
+              <input 
+                type="text" 
+                placeholder="e.g. Software Engineer, Data Scientist" 
+                value={targetJob}
+                onChange={(e) => setTargetJob(e.target.value)}
+                style={{ backgroundColor: '#f1f5f9', color: '#0f172a' }}
+              />
             </div>
 
             {error && <div style={{ color: 'var(--danger)', marginTop: '1rem', fontSize: '0.875rem' }}>{error}</div>}
@@ -109,8 +186,12 @@ const Upload = () => {
               <button 
                 className="btn btn-secondary" 
                 style={{ flex: 1 }} 
-                onClick={() => setFile(null)}
-                disabled={!file || loading}
+                onClick={() => {
+                  setFile(null);
+                  setTextInput('');
+                  setTargetJob('');
+                }}
+                disabled={(uploadMode === 'file' && !file) || (uploadMode === 'text' && !textInput) || loading}
               >
                 Clear
               </button>
@@ -118,7 +199,7 @@ const Upload = () => {
                 className="btn btn-primary" 
                 style={{ flex: 2 }} 
                 onClick={handleUpload}
-                disabled={!file || loading}
+                disabled={(uploadMode === 'file' && !file) || (uploadMode === 'text' && !textInput) || loading}
               >
                 {loading ? 'Uploading & Analyzing...' : 'Analyze Resume'}
               </button>

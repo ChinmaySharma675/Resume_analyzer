@@ -5,6 +5,7 @@ from app.extensions import db
 from app.models import Resume
 from app.utils.parser import extract_text
 from app.utils.skill_extractor import extract_skills
+from app.utils.analyzer import analyze_resume
 
 resume_bp = Blueprint("resume", __name__)
 
@@ -13,8 +14,22 @@ resume_bp = Blueprint("resume", __name__)
 def upload_resume():
     user_id = get_jwt_identity()
     
+    # CASE 1: Raw Text Upload
+    if request.is_json and request.json.get("text"):
+        raw_text = request.json.get("text")
+        target_job = request.json.get("target_job", "")
+        filename = f"Pasted Text Resume - {target_job}" if target_job else "Pasted Text Resume"
+        
+        resume = Resume(filename=filename, content=raw_text, user_id=user_id)
+        resume.skills = ", ".join(extract_skills(raw_text))
+        
+        db.session.add(resume)
+        db.session.commit()
+        return jsonify({"message": "Text resume processed successfully", "resume_id": resume.id})
+
+    # CASE 2: File Upload
     if "resume" not in request.files:
-        return jsonify({"message": "No file part"}), 400
+        return jsonify({"message": "No file part or text payload provided"}), 400
 
     file = request.files["resume"]
     if file.filename == "":
@@ -28,14 +43,19 @@ def upload_resume():
     file.save(filepath)
 
     text = extract_text(filepath)
+    if not text:
+         return jsonify({"message": "No valid text could be extracted from the file. If it's an image, ensure it is clear."}), 400
 
-    resume = Resume(filename=file.filename, content=text, user_id=user_id)
+    target_job = request.form.get("target_job", "")
+    filename = f"{file.filename} - {target_job}" if target_job else file.filename
+
+    resume = Resume(filename=filename, content=text, user_id=user_id)
     resume.skills = ", ".join(extract_skills(text))
     
     db.session.add(resume)
     db.session.commit()
 
-    return jsonify({"message": "Resume uploaded successfully", "resume_id": resume.id})
+    return jsonify({"message": "Resume uploaded and parsed successfully", "resume_id": resume.id})
 
 @resume_bp.route("/resumes", methods=["GET"])
 @jwt_required()
@@ -66,6 +86,20 @@ def delete_resume(id):
     db.session.commit()
 
     return jsonify({"message": "Resume deleted"})
+
+@resume_bp.route("/resume/<int:id>/analyze", methods=["GET"])
+@jwt_required()
+def analyze_resume_endpoint(id):
+    user_id = get_jwt_identity()
+    resume = Resume.query.filter_by(id=id, user_id=user_id).first()
+
+    if not resume:
+        return jsonify({"error": "Resume not found or unauthorized"}), 404
+
+    analysis = analyze_resume(resume.content)
+    analysis["skills_found"] = [s.strip() for s in resume.skills.split(',')] if resume.skills else []
+    
+    return jsonify(analysis)
 
 @resume_bp.route("/search", methods=["GET"])
 @jwt_required()

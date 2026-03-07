@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api';
 import { motion } from 'framer-motion';
 import { FileText, Trash2 } from 'lucide-react';
@@ -77,11 +78,17 @@ const Dashboard = () => {
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Detected Skills</p>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                   {resume.skills ? resume.skills.split(',').map(skill => (
-                    <span key={skill} style={{ background: 'rgba(255,255,255,0.05)', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', color: 'var(--text-main)' }}>
+                    <span key={skill} style={{ background: '#f1f5f9', border: '1px solid var(--border-light)', padding: '0.25rem 0.5rem', borderRadius: '0.25rem', fontSize: '0.75rem', color: 'var(--text-main)' }}>
                       {skill.trim()}
                     </span>
                   )) : <span style={{ color: 'var(--text-muted)', fontSize: '0.875rem' }}>No defined skills extracted</span>}
                 </div>
+              </div>
+
+              <div style={{ marginTop: '1.5rem', borderTop: '1px solid var(--border-light)', paddingTop: '1rem' }}>
+                <Link to={`/resume/${resume.id}/analysis`} className="btn btn-primary" style={{ width: '100%', padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
+                  View Full Analysis
+                </Link>
               </div>
             </motion.div>
           ))}
