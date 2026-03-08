@@ -167,3 +167,55 @@ function logout() {
     localStorage.removeItem("token");
     window.location.href = "login.html";
 }
+
+// --- SCROLL REVEAL (Intersection Observer) ---
+document.addEventListener("DOMContentLoaded", () => {
+    // Add reveal class to animatable elements
+    const targets = document.querySelectorAll(
+        '.feature-card, .hiw-step, .stat-card, .glass-card, .section-title, .section-subtitle, .hero-badge'
+    );
+    targets.forEach((el, i) => {
+        el.classList.add('reveal');
+        el.style.transitionDelay = `${(i % 4) * 80}ms`;
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal--visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+});
+
+// --- NAVBAR SCROLL EFFECT ---
+window.addEventListener('scroll', () => {
+    const navbar = document.querySelector('.navbar');
+    if (!navbar) return;
+    if (window.scrollY > 40) {
+        navbar.style.background = 'rgba(9, 14, 28, 0.95)';
+        navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.4)';
+    } else {
+        navbar.style.background = '';
+        navbar.style.boxShadow = '';
+    }
+});
+
+// --- SCORE BAR ANIMATION ---
+const resultCard = document.getElementById('resultCard');
+if (resultCard) {
+    const observer = new MutationObserver(() => {
+        if (!resultCard.classList.contains('d-none')) {
+            const scoreText = document.getElementById('matchScore');
+            const scoreBar  = document.getElementById('scoreBar');
+            if (scoreText && scoreBar) {
+                const val = parseInt(scoreText.innerText) || 0;
+                setTimeout(() => { scoreBar.style.width = val + '%'; }, 100);
+            }
+        }
+    });
+    observer.observe(resultCard, { attributes: true, attributeFilter: ['class'] });
+}
