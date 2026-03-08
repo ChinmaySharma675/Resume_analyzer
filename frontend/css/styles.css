@@ -609,3 +609,164 @@ footer {
         font-size: 2.5rem;
     }
 }
+
+/* ===== Drag & Drop Upload Zone ===== */
+.drop-zone {
+    border: 2px dashed rgba(139, 92, 246, 0.4);
+    border-radius: 14px;
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    background: rgba(15, 23, 42, 0.4);
+}
+
+.drop-zone:hover,
+.drop-zone--active {
+    border-color: #a78bfa;
+    background: rgba(79, 70, 229, 0.08);
+}
+
+.drop-zone--filled {
+    border-color: #10b981;
+    background: rgba(16, 185, 129, 0.06);
+}
+
+.drop-zone-icon {
+    color: #a78bfa;
+    margin-bottom: 1rem;
+}
+
+.drop-zone-text {
+    color: var(--text-dark);
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.drop-zone-link {
+    color: #a78bfa;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.drop-zone-sub {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    margin: 0.5rem 0 0;
+}
+
+/* ===== Password Strength Bar ===== */
+.strength-bar-wrap {
+    height: 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.strength-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 10px;
+    transition: width 0.4s ease, background 0.4s ease;
+}
+
+.strength-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin: 0.35rem 0 0;
+    text-align: right;
+}
+
+/* ===== Score Progress Bar ===== */
+.score-bar-wrap {
+    height: 8px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 400px;
+}
+
+.score-bar {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #10b981, #34d399);
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ===== Stat Card Icon ===== */
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(139, 92, 246, 0.2));
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    color: #a78bfa;
+}
+
+/* ===== Analysis History Table ===== */
+.history-table {
+    border-collapse: separate;
+    border-spacing: 0 0.5rem;
+    font-size: 0.9rem;
+}
+
+.history-table thead th {
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0.5rem 1rem;
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.history-table tbody tr {
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 10px;
+    transition: background 0.2s ease;
+}
+
+.history-table tbody tr:hover {
+    background: rgba(79, 70, 229, 0.08);
+}
+
+.history-table tbody td {
+    padding: 0.9rem 1rem;
+    color: var(--text-dark);
+    border-top: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.history-table tbody td:first-child {
+    border-left: 1px solid var(--glass-border);
+    border-radius: 10px 0 0 10px;
+}
+
+.history-table tbody td:last-child {
+    border-right: 1px solid var(--glass-border);
+    border-radius: 0 10px 10px 0;
+}
+
+.badge-pass {
+    background: rgba(16, 185, 129, 0.15);
+    color: #34d399;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.badge-fail {
+    background: rgba(239, 68, 68, 0.12);
+    color: #fca5a5;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
