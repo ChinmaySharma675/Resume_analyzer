@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { Briefcase, ChevronRight, Activity } from 'lucide-react';
+import { Briefcase, ChevronRight, Activity, Trash2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 const JobMatching = () => {
@@ -52,6 +52,26 @@ const JobMatching = () => {
     }
   };
 
+  const handleDeleteJob = async (jobId, event) => {
+    event.stopPropagation();
+    
+    if (!window.confirm("Are you sure you want to delete this job? This will also remove any associated match analysis.")) {
+      return;
+    }
+
+    try {
+      await api.delete(`/job/${jobId}`);
+      if (selectedJob && selectedJob.id === jobId) {
+        setSelectedJob(null);
+        setMatchScore(null);
+      }
+      fetchJobs();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete job.");
+    }
+  };
+
   const handleMatch = async () => {
     if (!selectedJob || !selectedResume) return;
     setLoading(true);
@@ -60,7 +80,7 @@ const JobMatching = () => {
         resume_id: parseInt(selectedResume),
         job_id: selectedJob.id
       });
-      setMatchScore(data.match_score);
+      setMatchScore(parseFloat((data.match_score * 10).toFixed(2)));
     } catch (err) {
       console.error(err);
     } finally {
@@ -124,7 +144,16 @@ const JobMatching = () => {
                     <span style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>ID: {job.id}</span>
                   </div>
                 </div>
-                <ChevronRight color={selectedJob?.id === job.id ? 'var(--primary)' : 'var(--text-muted)'} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <button 
+                    onClick={(e) => handleDeleteJob(job.id, e)}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                    title="Delete Job"
+                  >
+                     <Trash2 size={20} color="var(--danger)" />
+                  </button>
+                  <ChevronRight color={selectedJob?.id === job.id ? 'var(--primary)' : 'var(--text-muted)'} />
+                </div>
               </div>
             ))
           )}

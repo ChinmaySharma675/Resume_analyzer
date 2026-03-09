@@ -65,10 +65,13 @@ def get_resumes():
 
     data = []
     for r in resumes:
+        # Calculate score on the fly for the dashboard
+        analysis = analyze_resume(r.content)
         data.append({
             "id": r.id,
             "filename": r.filename,
-            "skills": r.skills
+            "skills": r.skills,
+            "score": analysis["score"]
         })
 
     return jsonify(data)

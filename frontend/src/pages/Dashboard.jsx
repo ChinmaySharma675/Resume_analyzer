@@ -60,8 +60,29 @@ const Dashboard = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
               className="card"
-              style={{ padding: '1.5rem' }}
+              style={{ padding: '1.5rem', position: 'relative' }}
             >
+              {/* Eligibility Badge */}
+              {(() => {
+                const skillsList = resume.skills ? resume.skills.split(',').filter(s => s.trim() !== '') : [];
+                const isEligible = resume.score > 70 && skillsList.length > 3;
+                return (
+                  <div style={{
+                    position: 'absolute',
+                    top: '-10px',
+                    right: '-10px',
+                    background: isEligible ? '#10b981' : '#ef4444',
+                    color: 'white',
+                    padding: '0.25rem 0.75rem',
+                    borderRadius: '9999px',
+                    fontSize: '0.75rem',
+                    fontWeight: 'bold',
+                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                  }}>
+                    {isEligible ? 'Eligible' : 'Rejected'}
+                  </div>
+                );
+              })()}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', overflow: 'hidden' }}>
                   <div style={{ background: 'rgba(99, 102, 241, 0.1)', padding: '0.5rem', borderRadius: '0.5rem' }}>

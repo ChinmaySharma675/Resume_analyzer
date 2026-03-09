@@ -54,9 +54,14 @@ def analyze_resume(text):
         suggestions.append({"text": "Consider adding your GPA/CGPA if it is above average.", "category": "Education", "priority": "Low Priority"})
     score += max(0, edu_score)
     
+    from app.utils.skill_extractor import extract_skills
+    extracted_skills = extract_skills(text)
+    
     # 3. Skills
     skills_score = 25
-    if not has_skills:
+    if len(extracted_skills) > 15:
+        skills_score = 24
+    elif not has_skills:
         skills_score = 0
         suggestions.append({"text": "Add a dedicated Skills section listing your top technologies.", "category": "Skills", "priority": "High Priority"})
     else:
@@ -98,6 +103,11 @@ def analyze_resume(text):
     score += max(0, cert_score)
     
     sections_detected = sum([has_education, has_experience, has_projects, has_skills, has_cert])
+    
+    if word_count < 20:
+        score = 2
+        cert_score = 0
+        impact_score = 2
     
     return {
         "score": score,

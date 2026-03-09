@@ -27,3 +27,19 @@ def create_job():
     db.session.commit()
 
     return jsonify({"message": "Job created", "job_id": job.id})
+
+@job_bp.route("/job/<int:job_id>", methods=["DELETE"])
+@jwt_required()
+def delete_job(job_id):
+    job = JobDescription.query.get(job_id)
+    if not job:
+        return jsonify({"message": "Job not found"}), 404
+        
+    # Delete related match results first
+    from app.models import MatchResult
+    MatchResult.query.filter_by(job_id=job_id).delete()
+    
+    db.session.delete(job)
+    db.session.commit()
+    
+    return jsonify({"message": "Job deleted successfully"})

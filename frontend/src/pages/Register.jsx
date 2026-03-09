@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { motion } from 'framer-motion';
-import { UserPlus } from 'lucide-react';
+import { Mail, Lock, User, Facebook, Twitter, Chrome } from 'lucide-react';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -24,44 +24,96 @@ const Register = () => {
   };
 
   return (
-    <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 'calc(100vh - 4rem)' }}>
+    <div className="flex items-center justify-center min-h-[calc(100vh-4rem)] bg-gray-100 p-4">
       <motion.div 
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.4 }}
-        className="card" style={{ width: '100%', maxWidth: '400px' }}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="flex flex-col md:flex-row w-full max-w-3xl min-h-[550px] bg-white rounded-3xl overflow-hidden shadow-2xl"
       >
-        <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-          <div style={{ display: 'inline-flex', background: 'rgba(99, 102, 241, 0.1)', padding: '1rem', borderRadius: '50%', marginBottom: '1rem' }}>
-             <UserPlus size={32} color="var(--primary)" />
+        {/* Left Side - Welcome Graphic */}
+        <div className="md:w-1/2 p-10 flex flex-col items-center justify-center relative overflow-hidden" style={{ background: 'linear-gradient(135deg, #1d69a6 0%, #00b4d8 100%)' }}>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl translate-x-1/2 -translate-y-1/2"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-cyan-300 opacity-20 rounded-full blur-3xl -translate-x-1/2 translate-y-1/2"></div>
+          
+          <div className="relative z-10 flex flex-col items-center w-full pr-16 -ml-8">
+            <div className="relative w-72 h-72 mb-8">
+               <div className="absolute inset-x-0 bottom-0 h-32 bg-white/20 rounded-t-full"></div>
+               {/* HD Illustration */}
+               <img src="/job_search.png" alt="Join Us" className="w-full h-full object-contain drop-shadow-lg opacity-90" />
+            </div>
+
+            <h2 className="text-4xl font-bold text-white tracking-wider text-center">JOIN US</h2>
+            <p className="text-cyan-100 mt-2 text-center">Start analyzing your resumes today</p>
           </div>
-          <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>Create Account</h2>
-          <p style={{ color: 'var(--text-muted)' }}>Sign up to start analyzing resumes</p>
+          
+          {/* Decorative curve overlaying the split */}
+          <div className="hidden md:block absolute top-0 -right-16 w-32 h-full bg-white" style={{ borderRadius: '50% 0 0 50%' }}></div>
         </div>
 
-        {error && <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem' }}>{error}</div>}
+        {/* Right Side - Register Form */}
+        <div className="md:w-1/2 p-10 lg:p-14 bg-white flex flex-col justify-center items-center relative z-10">
+          <div className="w-full max-w-xs">
+            <h2 className="text-3xl font-bold text-[#002b5e] text-center mb-6">REGISTER</h2>
 
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label>Full Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} required placeholder="John Doe" />
-          </div>
-          <div className="input-group">
-            <label>Email Address</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="you@example.com" />
-          </div>
-          <div className="input-group">
-            <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
-          </div>
-          <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-            Register
-          </button>
-        </form>
+            {error && <div className="bg-red-50 text-red-500 p-3 rounded-md mb-6 text-sm text-center border border-red-200">{error}</div>}
 
-        <p style={{ textAlign: 'center', marginTop: '1.5rem', color: 'var(--text-muted)', fontSize: '0.875rem' }}>
-          Already have an account? <Link to="/login" style={{ color: 'var(--primary)', fontWeight: '500' }}>Login</Link>
-        </p>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-5 w-full">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none" style={{ paddingLeft: '1.25rem' }}>
+                <User className="h-6 w-6 text-gray-400" />
+              </div>
+              <input 
+                type="text" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                required 
+                placeholder="Full Name" 
+                className="w-full pr-4 py-4 bg-gray-200 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-[#002b5e] focus:bg-white transition-colors h-14"
+                style={{ paddingLeft: '3.5rem' }}
+              />
+            </div>
+
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none" style={{ paddingLeft: '1.25rem' }}>
+                <Mail className="h-6 w-6 text-gray-400" />
+              </div>
+              <input 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                required 
+                placeholder="Email Address" 
+                className="w-full pr-4 py-4 bg-gray-200 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-[#002b5e] focus:bg-white transition-colors h-14"
+                style={{ paddingLeft: '3.5rem' }}
+              />
+            </div>
+            
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none" style={{ paddingLeft: '1.25rem' }}>
+                <Lock className="h-6 w-6 text-gray-400" />
+              </div>
+              <input 
+                type="password" 
+                value={password} 
+                onChange={(e) => setPassword(e.target.value)} 
+                required 
+                placeholder="Password" 
+                className="w-full pr-4 py-4 bg-gray-200 border-none rounded-lg text-gray-700 focus:ring-2 focus:ring-[#002b5e] focus:bg-white transition-colors h-14"
+                style={{ paddingLeft: '3.5rem' }}
+              />
+            </div>
+
+            <button type="submit" className="w-full py-4 bg-[#002b5e] hover:bg-[#001f44] text-white font-bold rounded-lg shadow-md transition-all duration-200 uppercase tracking-widest mt-2 h-14">
+              Create Account
+            </button>
+          </form>
+
+          <p className="text-center mt-8 text-sm text-gray-600">
+            Already have an account? <Link to="/login" className="text-gray-800 font-semibold hover:underline">Log In</Link>
+          </p>
+          </div>
+        </div>
       </motion.div>
     </div>
   );

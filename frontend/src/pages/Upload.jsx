@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
-import { UploadCloud, File, CheckCircle, Type, Image as ImageIcon } from 'lucide-react';
+import { UploadCloud, File, CheckCircle, Type, Image as ImageIcon, Brain, Shield, Zap, Users } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Upload = () => {
@@ -61,10 +61,54 @@ const Upload = () => {
   };
 
   return (
-    <div className="container main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-      <div style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '600px' }}>
-        <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>Upload Resume</h1>
-        <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem' }}>Upload your resume in PDF/Image format or simply paste the text. Our NLP engine will extract your skills and experience for job matching.</p>
+    <div className="container main-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', paddingTop: '2rem' }}>
+      
+      {/* Hero Section */}
+      <div style={{ textAlign: 'center', marginBottom: '3rem', maxWidth: '800px' }}>
+        <h1 style={{ fontSize: '3rem', fontWeight: 'bold', marginBottom: '1rem', lineHeight: '1.2' }}>
+          <span style={{ background: 'linear-gradient(to right, #10b981, #3b82f6, #8b5cf6)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+            Context-Aware
+          </span>
+          <br />
+          <span style={{ color: '#0f172a' }}>Resume Analyzer</span>
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '1.125rem', maxWidth: '600px', margin: '0 auto' }}>
+          AI-powered semantic analysis that understands your skills, projects, and potential — not just keywords.
+        </p>
+      </div>
+
+      {/* Feature Cards Grid */}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', 
+        gap: '1rem', 
+        width: '100%', 
+        maxWidth: '800px', 
+        marginBottom: '4rem' 
+      }}>
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1rem', background: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '0.75rem' }}>
+          <div style={{ color: '#10b981', marginBottom: '0.75rem' }}><Brain size={20} /></div>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#0f172a', marginBottom: '0.25rem' }}>Context-Aware</h3>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Semantic analysis beyond keyword matching</p>
+        </div>
+        
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1rem', background: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '0.75rem' }}>
+          <div style={{ color: '#10b981', marginBottom: '0.75rem' }}><Shield size={20} /></div>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#0f172a', marginBottom: '0.25rem' }}>Bias-Free</h3>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Fair evaluation for freshers & students</p>
+        </div>
+
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1rem', background: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '0.75rem' }}>
+          <div style={{ color: '#10b981', marginBottom: '0.75rem' }}><Zap size={20} /></div>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#0f172a', marginBottom: '0.25rem' }}>Instant Results</h3>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Get detailed feedback in seconds</p>
+        </div>
+
+        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '1rem', background: 'white', boxShadow: '0 4px 6px rgba(0,0,0,0.05)', borderRadius: '0.75rem' }}>
+          <div style={{ color: '#10b981', marginBottom: '0.75rem' }}><Users size={20} /></div>
+          <h3 style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#0f172a', marginBottom: '0.25rem' }}>Fresher-Friendly</h3>
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>Designed students & graduates</p>
+        </div>
       </div>
 
       <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem', background: 'rgba(255,255,255,0.05)', padding: '0.5rem', borderRadius: '1rem' }}>

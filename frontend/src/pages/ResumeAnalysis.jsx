@@ -54,8 +54,34 @@ const ResumeAnalysis = () => {
       </button>
 
       {/* Top Header Card */}
-      <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem', padding: '2.5rem' }}>
+      <div className="card" style={{ display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '2rem', padding: '2.5rem', position: 'relative' }}>
         
+        {/* Eligibility Badge */}
+        {(() => {
+          const skillsList = data.skills_found ? data.skills_found.filter(sk => sk.trim() !== '') : [];
+          const isEligible = score > 70 && skillsList.length > 3;
+          return (
+            <div style={{
+              position: 'absolute',
+              top: '1.5rem',
+              right: '1.5rem',
+              background: isEligible ? 'rgba(16, 185, 129, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+              color: isEligible ? '#10b981' : '#ef4444',
+              padding: '0.5rem 1rem',
+              borderRadius: '9999px',
+              fontSize: '1rem',
+              fontWeight: 'bold',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              border: `1px solid ${isEligible ? '#10b981' : '#ef4444'}`
+            }}>
+              {isEligible ? <CheckCircle2 size={18} /> : <XCircle size={18} />}
+              {isEligible ? 'Eligible' : 'Rejected'}
+            </div>
+          );
+        })()}
+
         {/* Score Circle */}
         <div style={{ position: 'relative', width: '160px', height: '160px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
           <svg width="160" height="160" style={{ transform: 'rotate(-90deg)', position: 'absolute', top: 0, left: 0 }}>
