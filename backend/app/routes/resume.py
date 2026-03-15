@@ -15,9 +15,10 @@ def upload_resume():
     user_id = get_jwt_identity()
     
     # CASE 1: Raw Text Upload
-    if request.is_json and request.json.get("text"):
-        raw_text = request.json.get("text")
-        target_job = request.json.get("target_job", "")
+    data = request.get_json(silent=True)
+    if data and data.get("text"):
+        raw_text = data.get("text")
+        target_job = data.get("target_job", "")
         filename = f"Pasted Text Resume - {target_job}" if target_job else "Pasted Text Resume"
         
         resume = Resume(filename=filename, content=raw_text, user_id=user_id)

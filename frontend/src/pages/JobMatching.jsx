@@ -80,7 +80,7 @@ const JobMatching = () => {
         resume_id: parseInt(selectedResume),
         job_id: selectedJob.id
       });
-      setMatchScore(parseFloat((data.match_score * 10).toFixed(2)));
+      setMatchScore(parseFloat((data.match_score).toFixed(2)));
     } catch (err) {
       console.error(err);
     } finally {

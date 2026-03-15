@@ -83,9 +83,10 @@ const Login = () => {
 
               {/* EMAIL */}
 
-              <div className="relative">
+              <div className="relative flex items-center">
                 <Mail
-                  className="absolute left-1 top-1/2 -translate-y-1/2 text-gray-500"
+                  className="absolute text-gray-500"
+                  style={{ left: '1rem' }}
                   size={20}
                 />
 
@@ -94,16 +95,18 @@ const Login = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  placeholder="       Email Address"
-                  className="w-full h-12 pl-12 pr-4 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all placeholder-gray-400"
+                  placeholder="Email Address"
+                  className="w-full h-12 pr-4 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all placeholder-gray-500"
+                  style={{ paddingLeft: '3rem' }}
                 />
               </div>
 
               {/* PASSWORD */}
 
-              <div className="relative">
+              <div className="relative flex items-center">
                 <Lock
-                  className="absolute left-1 top-1/2 -translate-y-1/2 text-gray-500"
+                  className="absolute text-gray-500"
+                  style={{ left: '1rem' }}
                   size={20}
                 />
 
@@ -112,8 +115,9 @@ const Login = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  placeholder="       Password"
-                  className="w-full h-12 pl-12 pr-4 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all placeholder-gray-400"
+                  placeholder="Password"
+                  className="w-full h-12 pr-4 bg-white text-gray-900 rounded-lg focus:outline-none focus:ring-2 focus:ring-white/50 transition-all placeholder-gray-500"
+                  style={{ paddingLeft: '3rem' }}
                 />
               </div>
 

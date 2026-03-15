@@ -54,7 +54,10 @@ const Upload = () => {
       setSuccess(true);
       setTimeout(() => navigate('/dashboard'), 2000);
     } catch (err) {
-      setError(err.response?.data?.message || 'Error uploading file');
+      console.error("Upload Error:", err);
+      console.error("Upload Error Data:", err.response?.data);
+      console.error("Upload Error Message:", err.message);
+      setError(err.response?.data?.message || err.message || 'Error uploading file');
     } finally {
       setLoading(false);
     }

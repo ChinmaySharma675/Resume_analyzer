@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import api from '../api';
 import { motion } from 'framer-motion';
 import { FileText, Trash2 } from 'lucide-react';
+import { jobsData } from '../utils/jobsData';
 
 const Dashboard = () => {
   const [resumes, setResumes] = useState([]);
@@ -64,8 +65,42 @@ const Dashboard = () => {
             >
               {/* Eligibility Badge */}
               {(() => {
-                const skillsList = resume.skills ? resume.skills.split(',').filter(s => s.trim() !== '') : [];
-                const isEligible = resume.score > 70 && skillsList.length > 3;
+                const skillsList = resume.skills ? resume.skills.split(',').map(s => s.trim().toLowerCase()).filter(s => s !== '') : [];
+                let isEligible = false;
+                
+                // Try to extract a target job from filename (e.g. "MyResume.pdf - Software Engineer")
+                let targetJobName = null;
+                const dashIndex = resume.filename.lastIndexOf(' - ');
+                if (dashIndex !== -1) {
+                  targetJobName = resume.filename.substring(dashIndex + 3).trim().toLowerCase();
+                }
+
+                // Look for matching job in jobsData
+                let matchedJob = null;
+                if (targetJobName) {
+                    matchedJob = jobsData.find(job => job.title.toLowerCase().includes(targetJobName) || targetJobName.includes(job.title.toLowerCase()));
+                }
+
+                if (matchedJob) {
+                  // Calculate strictly against the job using JobEligibility logic
+                  const hasSkill = (requiredSkill) => {
+                    const reqLower = requiredSkill.toLowerCase();
+                    return skillsList.some(s => s.includes(reqLower) || reqLower.includes(s));
+                  };
+                  
+                  const matchRequiredCount = matchedJob.requiredSkills.filter(hasSkill).length;
+                  const matchPreferredCount = matchedJob.preferredSkills.filter(hasSkill).length;
+                  const totalRequired = matchedJob.requiredSkills.length;
+                  const totalPreferred = matchedJob.preferredSkills.length;
+                  
+                  const matchScore = ((matchRequiredCount * 2) + matchPreferredCount) / ((totalRequired * 2) + totalPreferred || 1) * 100;
+                  
+                  isEligible = matchScore >= 70;
+                } else {
+                  // Fallback to original logic if no specific job targeted
+                  isEligible = resume.score > 70 && skillsList.length > 3;
+                }
+
                 return (
                   <div style={{
                     position: 'absolute',
