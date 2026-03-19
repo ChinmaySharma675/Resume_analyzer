@@ -1,0 +1,509 @@
+Build a complete, single-file React (.jsx) artifact called "ResumeAI — Context-Aware Resume Analyzer". 
+This is a production-grade, fully working AI SaaS app that uses the Anthropic API (Claude) 
+to analyze resumes intelligently. Every feature below must be fully implemented and working.
+
+════════════════════════════════════════
+TECH CONSTRAINTS (HARD RULES)
+════════════════════════════════════════
+
+- Single .jsx React artifact — everything in one file
+- Use Recharts for all charts (import from 'recharts')
+- Use lucide-react for icons (import from 'lucide-react')
+- Use only Tailwind utility classes for styling
+- Call Anthropic API at: POST https://api.anthropic.com/v1/messages
+  - model: "claude-sonnet-4-20250514"
+  - max_tokens: 2000
+  - NO Authorization header needed — it is handled by the platform
+- Use useState, useEffect, useRef, useCallback hooks
+- NO localStorage, NO external auth, NO backend
+- File parsing: use FileReader API to read text from .txt files, 
+  and show a text extraction notice for PDF/DOCX (ask user to paste text instead, 
+  OR use pdf.js from cdnjs for PDF extraction)
+- All state lives in React useState
+
+════════════════════════════════════════
+VISUAL DESIGN (CRITICAL — DO NOT SKIP)
+════════════════════════════════════════
+
+Dark theme. The aesthetic is "premium AI tool" — think Linear, Vercel, Raycast.
+
+Color palette (use as Tailwind arbitrary values or inline styles):
+- Background primary:   #0a0a0f
+- Background card:      #111118
+- Background elevated:  #1a1a24
+- Border:               #2a2a3a
+- Accent purple:        #7c3aed
+- Accent purple light:  #a78bfa
+- Accent cyan:          #06b6d4
+- Accent green:         #10b981
+- Accent amber:         #f59e0b
+- Accent red:           #ef4444
+- Text primary:         #f0f0f8
+- Text secondary:       #8b8ba7
+- Text muted:           #4a4a6a
+
+Typography:
+- Import: @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap')
+- Headings: Space Grotesk, font-weight 600–700
+- Body: Space Grotesk, font-weight 400–500
+- Code/scores: JetBrains Mono
+
+Add a <style> tag inside the component with:
+- Custom scrollbar (thin, dark)
+- Smooth transitions on interactive elements
+- Glowing border on focused inputs (box-shadow: 0 0 0 2px #7c3aed55)
+- Animated gradient on the hero section background
+- Card hover lift effect (transform translateY -2px, box-shadow glow)
+- Animated score number counter (count up on reveal)
+- Pulsing dot animation for "analyzing" state
+- Gradient text for the app name
+- Custom checkbox / radio styles
+
+════════════════════════════════════════
+APP PAGES / VIEWS (use React state to switch between them)
+════════════════════════════════════════
+
+The app has 3 views managed by a `currentView` state: 'upload', 'analyzing', 'dashboard'
+
+────────────────────────────────────────
+VIEW 1: UPLOAD PAGE  (currentView === 'upload')
+────────────────────────────────────────
+
+Header:
+- App logo (stylized "R" in a gradient circle) + name "ResumeAI"
+- Tagline: "Intelligent resume analysis powered by Claude"
+- Subtle animated gradient mesh background
+
+Left panel — Resume Input:
+- Large drag-and-drop zone with dashed animated border
+  - Shows upload icon + "Drop your resume here"
+  - Accepts .pdf, .doc, .docx, .txt
+  - On file drop/select: show filename + file size + file type icon
+  - For .txt files: auto-read content using FileReader
+  - For .pdf/.doc/.docx: show notice "PDF/DOCX detected — we'll extract what we can. 
+    For best results, paste your resume text below."
+  - Use pdf.js (cdnjs) to attempt PDF text extraction
+- OR a large textarea labeled "Or paste your resume text here"
+  - Placeholder: "Paste your complete resume including work experience, skills, education..."
+  - Min 200px height, monospace font, character count shown
+
+Right panel — Job Description (Optional but recommended):
+- Textarea labeled "Target Job Description"
+  - Placeholder: "Paste the job posting you're applying to..."
+  - Helper text: "Adding a job description enables skill gap analysis and match scoring"
+- Target Role input (text field): "e.g. Software Engineer, Data Scientist"
+- Experience Level selector: Fresher / Junior (1-3 yrs) / Mid (3-6 yrs) / Senior (6+ yrs)
+
+Bottom:
+- Large "Analyze My Resume →" button
+  - Gradient background: purple to cyan
+  - Disabled state if no resume text
+  - Shows validation: "Add your resume to continue"
+
+────────────────────────────────────────
+VIEW 2: ANALYZING PAGE  (currentView === 'analyzing')
+────────────────────────────────────────
+
+Full-screen centered animation:
+- Large animated brain/circuit icon (SVG, animated with CSS)
+- "Analyzing your resume..." heading
+- Animated progress steps that tick off one by one (with 800ms delays):
+  1. ✓ Extracting resume structure
+  2. ✓ Identifying skills and experience  
+  3. ✓ Evaluating project complexity
+  4. ✓ Matching against job requirements
+  5. ✓ Generating improvement suggestions
+  6. ✓ Computing ATS compatibility score
+- Each step has a pulsing dot → checkmark animation when complete
+- Subtle particle/dot background animation (CSS only)
+
+════════════════════════════════════════
+API CALL — THE BRAIN OF THE APP
+════════════════════════════════════════
+
+When user clicks "Analyze", call the Anthropic API with this system + user prompt:
+
+SYSTEM PROMPT:
+"You are an expert resume analyst and career coach with deep knowledge of ATS systems, 
+hiring practices, and technical skill requirements across industries. 
+You analyze resumes with precision and provide actionable, specific feedback.
+You always respond with valid JSON only — no markdown, no explanation outside the JSON."
+
+USER PROMPT (construct dynamically):
+Analyze this resume thoroughly and return a JSON object with EXACTLY this structure:
+{
+"candidate": {
+"name": "string (extracted name or 'Not found')",
+"email": "string or null",
+"phone": "string or null",
+"location": "string or null",
+"linkedin": "string or null",
+"summary": "string (2-3 sentence professional summary you write based on their experience)"
+},
+"scores": {
+"overall": number (0-100),
+"ats_compatibility": number (0-100),
+"skill_relevance": number (0-100),
+"experience_quality": number (0-100),
+"education_score": number (0-100),
+"formatting_score": number (0-100),
+"impact_score": number (0-100)
+},
+"skills": {
+"found": ["array of skills found in resume"],
+"missing": ["array of important skills missing based on job description or role"],
+"recommended": ["array of skills to learn next for career growth"]
+},
+"experience": {
+"total_years": number,
+"level": "Fresher|Junior|Mid|Senior",
+"roles": [{"title": "string", "company": "string", "duration": "string", "impact_score": number}]
+},
+"education": {
+"highest_degree": "string",
+"institutions": ["array of institutions"],
+"relevant_coursework": ["array if found"]
+},
+"projects": [
+{
+"name": "string",
+"description": "string",
+"technologies": ["array"],
+"complexity": "Low|Medium|High",
+"improvement": "specific suggestion to make this project description stronger"
+}
+],
+"job_match": {
+"percentage": number (0-100, or null if no JD provided),
+"matching_skills": ["skills that match JD"],
+"missing_for_role": ["skills needed for this specific role"],
+"fit_summary": "string (2-3 sentences about fit)"
+},
+"ats_analysis": {
+"score": number (0-100),
+"keyword_density": "Low|Medium|High",
+"format_issues": ["list of ATS formatting problems found"],
+"good_practices": ["list of ATS-friendly things they're already doing"],
+"critical_fixes": ["top 3 most important ATS fixes"]
+},
+"improvements": {
+"critical": [
+{"issue": "string", "suggestion": "string", "example": "string (before/after example)"}
+],
+"recommended": [
+{"issue": "string", "suggestion": "string"}
+],
+"nice_to_have": [
+{"issue": "string", "suggestion": "string"}
+]
+},
+"bullet_rewrites": [
+{
+"original": "string (weak bullet from their resume)",
+"improved": "string (your rewritten version with metrics and impact)",
+"reason": "string (why this version is better)"
+}
+],
+"interview_questions": [
+{"question": "string", "category": "Technical|Behavioral|Situational", "tip": "string"}
+],
+"roadmap": {
+"30_days": ["array of specific actionable items"],
+"90_days": ["array of medium-term goals"],
+"6_months": ["array of longer-term career steps"]
+},
+"strengths": ["top 3-5 genuine strengths from this resume"],
+"red_flags": ["any concerns a recruiter might have"]
+}
+Resume to analyze:
+${resumeText}
+${jobDescription ? Target Job Description:\n${jobDescription} : ''}
+${targetRole ? Target Role: ${targetRole} : ''}
+${experienceLevel ? Candidate Experience Level: ${experienceLevel} : ''}
+Parse the JSON response and store in `analysisData` state.
+On parse error, show error state with retry button.
+
+════════════════════════════════════════
+VIEW 3: DASHBOARD  (currentView === 'dashboard')
+════════════════════════════════════════
+
+Navigation:
+- Top navbar with app logo
+- Tab navigation: Overview | Skills | Improvements | Projects | Interview Prep | Roadmap
+- "Analyze New Resume" button (resets to upload view)
+- Candidate name + overall score badge in navbar
+
+────────────────────────────────────────
+TAB 1: OVERVIEW
+────────────────────────────────────────
+
+Row 1 — Score Cards (animated count-up on mount):
+- Overall Score: Large number in JetBrains Mono, colored by score:
+  - 80-100: green glow
+  - 60-79: amber glow  
+  - 0-59: red glow
+  - With label and score description
+- ATS Score card
+- Job Match % card (shows "N/A" if no JD provided)
+- Experience Level badge
+
+Row 2 — Main Charts:
+
+LEFT: Resume Score Breakdown — RadarChart (Recharts)
+- Categories: ATS Compatibility, Skill Relevance, Experience Quality, 
+  Education, Formatting, Impact Score
+- Deep purple fill with cyan stroke
+- Animated on mount
+
+CENTER: Score Gauge — Custom SVG arc gauge
+- Large circular gauge showing overall score
+- Color gradient from red → amber → green along the arc
+- Animated fill on mount (SVG stroke-dasharray animation)
+- Score number in center with label
+
+RIGHT: Skills Overview — Custom visualization
+- Found skills as green pills
+- Missing skills as red outlined pills (with + icon)
+- Recommended skills as purple pills (with sparkle icon)
+
+Row 3 — Summary Cards:
+- AI-generated candidate summary
+- Strengths list (green check icons)
+- Red flags list (red warning icons)
+- Candidate info (name, email, location extracted)
+
+────────────────────────────────────────
+TAB 2: SKILLS
+────────────────────────────────────────
+
+Three columns:
+- "Skills You Have" — green cards with skill name
+- "Missing for This Role" — red cards, each with tooltip explaining why it matters
+- "Recommended to Learn" — purple cards with "Add to roadmap" button (shows toast)
+
+Bar chart: BarChart (Recharts) showing skill match percentage by category
+(Technical Skills, Soft Skills, Domain Knowledge, Tools)
+
+Skill gap visualization: 
+- Horizontal progress bars for each skill category
+- Color coded: green = strong, amber = partial, red = missing
+
+────────────────────────────────────────
+TAB 3: IMPROVEMENTS
+────────────────────────────────────────
+
+Three sections with accordion/expand behavior:
+
+🔴 Critical Issues (must fix):
+- Each item shows: issue label, detailed suggestion, before/after example
+- Example styled as a diff: red background for "before", green for "after"
+
+🟡 Recommended Improvements:
+- Each item shows: issue + suggestion
+- Checkbox to mark as done (visual only)
+
+🟢 Nice to Have:
+- Similar to above, lower priority
+
+ATS Deep Dive section:
+- ATS score meter
+- Format issues list (red X icons)
+- Good practices list (green check icons)
+- Critical fixes highlighted in a callout box
+
+────────────────────────────────────────
+TAB 4: PROJECTS
+────────────────────────────────────────
+
+Project cards (one per project found):
+- Project name + complexity badge (Low/Medium/High)
+- Technologies used as tags
+- Current description
+- "How to improve" section with Claude's suggestion
+- Complexity rating stars
+
+If no projects found:
+- Callout: "No projects detected. Adding projects significantly improves your resume score."
+- Tips for what to include
+
+────────────────────────────────────────
+TAB 5: INTERVIEW PREP
+────────────────────────────────────────
+
+Bullet rewrites section:
+- Side-by-side cards: Original (red tint) → Improved (green tint)
+- "Why this is better" expandable section
+- Copy to clipboard button per rewrite
+
+Interview questions section:
+- Filter tabs: All | Technical | Behavioral | Situational
+- Question cards with:
+  - Question text
+  - Category badge
+  - "Preparation tip" collapsed by default, click to expand
+- "Practice with AI" button (sends question to a mock interview modal)
+
+Mock Interview Modal:
+- Shows question
+- Large textarea for user's answer
+- "Get AI Feedback" button → calls Claude API again with:
+  System: "You are an interview coach. Give brief, constructive feedback on this answer."
+  User: "Question: [question]\n\nAnswer: [userAnswer]\n\nGive feedback in 3-4 sentences."
+- Shows feedback below
+- Close button
+
+────────────────────────────────────────
+TAB 6: ROADMAP
+────────────────────────────────────────
+
+Three-column timeline layout:
+- 30 Days column (amber): List of specific action items
+- 90 Days column (blue): Medium-term goals
+- 6 Months column (green): Career milestones
+
+Each item is a card with:
+- Action item text
+- Checkbox (visual only)
+- Category tag (Learning / Portfolio / Networking / Application)
+
+Progress summary at top:
+- "Your personalized roadmap to [target role]"
+- Count of total action items
+
+════════════════════════════════════════
+ADDITIONAL FEATURES
+════════════════════════════════════════
+
+1. SCORE HISTORY (in-memory only):
+- After each analysis, add to a scores[] array
+- Show tiny sparkline chart in the header if >1 analysis done
+- "Previous analyses: X" counter
+
+2. EXPORT BUTTON:
+- "Export Report" button on dashboard
+- Generates a text summary using window.print() or builds 
+  a formatted text blob and triggers download as .txt
+- Include: scores, top improvements, skills gap, roadmap
+
+3. COPY TO CLIPBOARD:
+- Every suggestion and rewrite has a copy button (clipboard icon)
+- Shows "Copied!" toast for 2 seconds
+
+4. TOAST NOTIFICATIONS:
+- Custom toast component (bottom-right, slides in)
+- Used for: copy success, analysis complete, errors
+- Auto-dismiss after 3 seconds
+
+5. RESPONSIVE:
+- Works on mobile (tabs become a dropdown on small screens)
+- Charts adapt to container width (Recharts responsive containers)
+
+6. LOADING STATES:
+- Skeleton loading on all cards while API call is in flight
+- Smooth transitions between views (opacity + transform)
+
+7. ERROR HANDLING:
+- If API returns non-JSON: show error card with raw response and retry
+- If network error: show error with retry button
+- If resume text is too short (<50 chars): show validation message
+
+════════════════════════════════════════
+ANIMATIONS (implement all of these)
+════════════════════════════════════════
+
+1. Page transitions: fade + slide up (opacity 0→1, translateY 20→0) on view change
+2. Score counter: counts up from 0 to final score over 1.5s on dashboard mount
+3. Radar chart: animates in (Recharts has this built-in, use animationBegin)
+4. Gauge arc: SVG stroke-dasharray animates from 0 to final value
+5. Skill pills: staggered fade-in (each pill 50ms delay offset)
+6. Card hover: translateY(-2px) + box-shadow glow
+7. Analyzing steps: each step reveals with 800ms delay
+8. Tab transitions: smooth opacity transition
+9. Accordion expand: max-height transition
+
+════════════════════════════════════════
+SAMPLE DATA (IMPORTANT)
+════════════════════════════════════════
+
+Include a "Try with sample resume" button on the upload page that fills in:
+
+Sample resume text:
+"""
+John Doe
+john.doe@email.com | +1 (555) 123-4567 | New York, NY
+linkedin.com/in/johndoe | github.com/johndoe
+
+EDUCATION
+Bachelor of Science in Computer Science
+State University, 2023 | GPA: 3.6/4.0
+
+TECHNICAL SKILLS
+Languages: Python, JavaScript, Java, SQL
+Frameworks: React, Node.js, Express
+Tools: Git, VS Code, Postman
+Databases: MySQL, MongoDB
+
+PROJECTS
+Todo App
+- Built a todo application using React and Node.js
+- Used MySQL database for storage
+- Deployed on Heroku
+
+Weather App
+- Created weather app using OpenWeather API
+- Used HTML, CSS and JavaScript
+- 50 users
+
+EXPERIENCE
+Software Intern | TechCorp Inc. | June 2023 - August 2023
+- Helped with bug fixes
+- Worked on frontend features
+- Attended team meetings
+
+CERTIFICATIONS
+- AWS Cloud Practitioner (2023)
+- JavaScript Certificate from Udemy
+"""
+
+Sample job description:
+"""
+Software Engineer - Full Stack
+We are looking for a Full Stack Engineer to join our team.
+Requirements:
+- 1-3 years of experience with React and Node.js
+- Experience with TypeScript
+- Knowledge of cloud platforms (AWS, GCP, or Azure)
+- Docker and containerization experience
+- CI/CD pipeline experience
+- Strong problem-solving skills
+- Experience with REST APIs and GraphQL
+- PostgreSQL or other relational database experience
+- Git workflow and code review experience
+"""
+
+════════════════════════════════════════
+FINAL CHECKLIST — VERIFY ALL OF THESE
+════════════════════════════════════════
+
+Before finalizing the code, confirm:
+[ ] API call is implemented and works with real Anthropic API
+[ ] JSON parsing with error handling is implemented
+[ ] All 6 dashboard tabs are implemented
+[ ] All charts render with real data from API response
+[ ] Score gauge SVG animation works
+[ ] Counter animation works (scores count up)
+[ ] Analyzing page steps animate one by one
+[ ] Sample data button pre-fills the form
+[ ] Mock interview modal opens and calls API for feedback
+[ ] Export report function works
+[ ] Toast notifications appear and dismiss
+[ ] App looks stunning in dark theme — DO NOT use generic/plain styling
+[ ] Fonts are loaded (Space Grotesk + JetBrains Mono)
+[ ] All Recharts components use ResponsiveContainer
+[ ] Mobile responsive layout works
+[ ] Error states are handled gracefully
+[ ] "Analyze New Resume" resets state correctly
+
+Write complete, working, production-quality code. 
+This will be rendered as a React artifact in Claude.ai.
+Make it beautiful, functional, and impressive.
