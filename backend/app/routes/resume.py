@@ -7,7 +7,7 @@ from app.utils.parser import extract_text
 from app.utils.skill_extractor import extract_skills
 from app.utils.analyzer import analyze_resume
 
-resume_bp = Blueprint("resume", __name__)
+resume_bp = Blueprint("resume", __name__, url_prefix="/api")
 
 @resume_bp.route("/upload", methods=["POST"])
 @jwt_required()

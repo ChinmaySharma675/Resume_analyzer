@@ -144,3 +144,5 @@ This project is for academic and educational purposes.
  -Industry-standard structure
 
  -Deployable and scalable
+
+ Context Aware Resume analyser using AI and NLP

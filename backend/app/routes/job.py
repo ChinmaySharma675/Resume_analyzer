@@ -1,9 +1,9 @@
 from flask import Blueprint, request, jsonify
 from app.extensions import db
-from app.models import JobDescription
+from app.models import JobDescription, MatchResult
 from flask_jwt_extended import jwt_required
 
-job_bp = Blueprint("job", __name__)
+job_bp = Blueprint("job", __name__, url_prefix="/api")
 
 @job_bp.route("/jobs", methods=["GET"])
 def get_jobs():
@@ -36,7 +36,6 @@ def delete_job(job_id):
         return jsonify({"message": "Job not found"}), 404
         
     # Delete related match results first
-    from app.models import MatchResult
     MatchResult.query.filter_by(job_id=job_id).delete()
     
     db.session.delete(job)

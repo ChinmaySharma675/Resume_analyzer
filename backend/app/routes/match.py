@@ -4,7 +4,7 @@ from app.extensions import db
 from app.models import Resume, JobDescription, MatchResult
 from app.utils.matcher import calculate_match
 
-match_bp = Blueprint("match", __name__)
+match_bp = Blueprint("match", __name__, url_prefix="/api")
 
 @match_bp.route("/match", methods=["POST"])
 @jwt_required()

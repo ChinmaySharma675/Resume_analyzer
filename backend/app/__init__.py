@@ -16,10 +16,14 @@ def create_app():
     from .routes.resume import resume_bp
     from .routes.match import match_bp
     from .routes.job import job_bp
+    from .routes.admin import admin_bp
+    from .routes.utils import utils_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(resume_bp)
     app.register_blueprint(match_bp)
     app.register_blueprint(job_bp)
+    app.register_blueprint(admin_bp)
+    app.register_blueprint(utils_bp)
 
     return app
