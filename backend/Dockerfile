@@ -15,10 +15,11 @@ RUN pip install gunicorn
 # Copy source code
 COPY . .
 
-# Create upload directory
-RUN mkdir -p uploads
+# Create writable directories for SQLite DB and uploads
+RUN mkdir -p /app/instance && chmod 777 /app/instance
+RUN mkdir -p /app/uploads && chmod 777 /app/uploads
 
 EXPOSE 5000
 
-# Production server
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "run:app"]
+# Production server - single worker for SQLite compatibility
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "1", "--timeout", "120", "run:app"]
