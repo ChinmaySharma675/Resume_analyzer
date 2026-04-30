@@ -7,16 +7,11 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Explicitly allow the frontend URL for production
+    # Allow all origins for demo/presentation (ngrok, Render, localhost)
     CORS(app, resources={r"/*": {
-        "origins": [
-            "http://localhost:5173", 
-            "http://127.0.0.1:5173", 
-            "https://resume-analyzer-client-e2gx.onrender.com"
-        ],
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
     }})
 
     db.init_app(app)
