@@ -1,10 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'https://unpensioned-olin-overfavorably.ngrok-free.dev',
-  headers: {
-    'ngrok-skip-browser-warning': 'true'
-  }
+  baseURL: import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000',
 });
 
 api.interceptors.request.use((config) => {
