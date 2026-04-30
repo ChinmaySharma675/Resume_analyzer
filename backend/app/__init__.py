@@ -7,9 +7,9 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Allow requests from the React dev server with credentials (JWT tokens)
+    # Allow requests from local dev and production Render URLs
     CORS(app, resources={r"/*": {
-        "origins": ["http://localhost:5173", "http://127.0.0.1:5173"],
+        "origins": ["http://localhost:5173", "http://127.0.0.1:5173", "https://*.onrender.com"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
         "supports_credentials": True
@@ -27,5 +27,9 @@ def create_app():
     app.register_blueprint(resume_bp)
     app.register_blueprint(match_bp)
     app.register_blueprint(job_bp)
+
+    @app.route('/')
+    def home():
+        return {"message": "Context-Aware Resume Analyzer API is Running!", "status": "Online"}
 
     return app
