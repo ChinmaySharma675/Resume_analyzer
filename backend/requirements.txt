@@ -3,7 +3,7 @@ alembic==1.18.4
 annotated-types==0.7.0
 anyio==4.11.0
 asttokens==3.0.0
-audioop-lts==0.2.2
+# audioop-lts==0.2.2 (removed for compatibility)
 audioread==3.1.0
 beautifulsoup4==4.13.4
 blinker==1.9.0
@@ -108,9 +108,9 @@ soxr==1.0.0
 SQLAlchemy==2.0.46
 srt==3.5.3
 stack-data==0.6.3
-standard-aifc==3.13.0
-standard-chunk==3.13.0
-standard-sunau==3.13.0
+# standard-aifc==3.13.0 (removed)
+# standard-chunk==3.13.0 (removed)
+# standard-sunau==3.13.0 (removed)
 starlette==0.48.0
 sympy==1.14.0
 threadpoolctl==3.6.0
