@@ -1,3 +1,4 @@
+import os
 from flask import Flask
 from flask_cors import CORS
 from config import Config
@@ -7,19 +8,23 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Allow all origins for demo/presentation (ngrok, Render, localhost)
+    # Clean CORS for production
     CORS(app, resources={r"/*": {
         "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
     }})
 
     db.init_app(app)
     jwt.init_app(app)
 
-    # Ensure tables exist on every startup (critical for Render/production)
+    # Ensure tables exist
     with app.app_context():
         db.create_all()
+        # Create uploads folder
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
 
     from .routes.auth import auth_bp
     from .routes.resume import resume_bp
@@ -33,6 +38,6 @@ def create_app():
 
     @app.route('/')
     def home():
-        return {"message": "Context-Aware Resume Analyzer API is Running!", "status": "Online"}
+        return {"message": "Resume Analyzer API is Online", "status": "Ready"}
 
     return app
