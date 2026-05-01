@@ -23,6 +23,7 @@ def create_app():
 
     # Ensure tables exist
     with app.app_context():
+        from . import models  # MUST import models before create_all()
         db.create_all()
         # Create uploads folder
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
