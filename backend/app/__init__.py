@@ -8,14 +8,12 @@ def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
 
-    # Allow requests from the React frontend with credentials (JWT tokens)
-    frontend_url = os.environ.get("FRONTEND_URL", "http://localhost:5173")
-    origins = [frontend_url, "http://localhost:5173", "http://127.0.0.1:5173"]
+    # FIXED CORS: Standard configuration for JWT-based apps
+    # This allows the Vercel frontend to talk to the Render backend without "Network Error"
     CORS(app, resources={r"/*": {
-        "origins": origins,
+        "origins": "*",
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
+        "allow_headers": ["Content-Type", "Authorization"]
     }})
 
     db.init_app(app)
@@ -23,7 +21,7 @@ def create_app():
 
     # Ensure tables exist
     with app.app_context():
-        from . import models  # MUST import models before create_all()
+        from . import models
         db.create_all()
         # Create uploads folder
         if not os.path.exists(app.config['UPLOAD_FOLDER']):
