@@ -21,6 +21,13 @@ def create_app():
     db.init_app(app)
     jwt.init_app(app)
 
+    # Ensure tables exist
+    with app.app_context():
+        db.create_all()
+        # Create uploads folder
+        if not os.path.exists(app.config['UPLOAD_FOLDER']):
+            os.makedirs(app.config['UPLOAD_FOLDER'])
+
     from .routes.auth import auth_bp
     from .routes.resume import resume_bp
     from .routes.match import match_bp
@@ -30,5 +37,9 @@ def create_app():
     app.register_blueprint(resume_bp)
     app.register_blueprint(match_bp)
     app.register_blueprint(job_bp)
+
+    @app.route('/')
+    def home():
+        return {"message": "Resume Analyzer API is Online", "status": "Ready"}
 
     return app
